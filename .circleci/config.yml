@@ -43,6 +43,7 @@ jobs:
     steps:
       - checkout
       - run: echo "this task should bail out after this line, interrupting the workflow"
+      - run: git log -1 "$CIRCLE_SHA1"
       - skip-if-do-not-deploy
       - run: echo "ERROR - this should never print"
 
