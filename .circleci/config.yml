@@ -41,6 +41,7 @@ jobs:
           username: $DOCKER_USER
           password: $DOCKER_PASS
     steps:
+      - checkout
       - run: echo "this task should bail out after this line, interrupting the workflow"
       - skip-if-do-not-deploy
       - run: echo "ERROR - this should never print"
