@@ -28,12 +28,18 @@ jobs:
   task-to-run:
     docker:
       - image: ubuntu-2004:202101-01 # Ubuntu 20.04, Docker v20.10.2, Docker Compose v1.28.2
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     steps:
       - run: echo "this task runs"
 
   task-to-not-run:
     docker:
       - image: ubuntu-2004:202101-01 # Ubuntu 20.04, Docker v20.10.2, Docker Compose v1.28.2
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     steps:
       - run: echo "this task should bail out after this line, interrupting the workflow"
       - skip-if-do-not-deploy
