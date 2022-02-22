@@ -10,21 +10,17 @@ workflows:
   version: 2
   pr-workflow:
     jobs:
-      - checks: &pr-filters
+      - task-to-run: &pr-filters
           filters:
             branches:
               ignore: main
-      - task-to-run:
-          <<: *pr-filters
 
   main-workflow:
     jobs:
-      - checks: &main-filters
+      - task-to-run: &main-filters
           filters:
             branches:
               only: main
-      - task-to-run:
-          <<: *main-filters
       - task-to-not-run:
           <<: *main-filters
 
