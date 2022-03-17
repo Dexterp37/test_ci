@@ -21,8 +21,19 @@ workflows:
           filters:
             branches:
               only: main
-      - task-to-not-run:
+      - task-that-can-be-skipped:
           <<: *main-filters
+      - hold: # <<< A job that will require manual approval in the CircleCI web application.
+          <<: *main-filters
+          type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
+          requires: # We only run the "hold" job when test2 has succeeded
+           - task-that-can-be-skipped
+      # On approval of the `hold` job, any successive job that requires the `hold` job will run.
+      # In this case, a user is manually triggering the deploy job.
+      - deploy-to-prod:
+          <<: *main-filters
+          requires:
+            - hold
 
 jobs:
   task-to-run:
@@ -34,7 +45,7 @@ jobs:
     steps:
       - run: echo "this task runs"
 
-  task-to-not-run:
+  task-that-can-be-skipped:
     docker:
       - image: circleci/rust:latest
         auth:
@@ -46,6 +57,15 @@ jobs:
       - run: git log -1 "$CIRCLE_SHA1"
       - skip-if-do-not-deploy
       - run: echo "ERROR - this should never print"
+
+  deploy-to-prod:
+    docker:
+      - image: circleci/rust:latest
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
+    steps:
+      - run: echo "this task runs"
 
 commands:
   skip-if-do-not-deploy:
