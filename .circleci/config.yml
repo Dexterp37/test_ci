@@ -33,7 +33,7 @@ workflows:
       - deploy-to-prod:
           <<: *main-filters
           requires:
-            - hold
+            - unhold-to-deploy-to-prod
 
 jobs:
   task-to-run:
