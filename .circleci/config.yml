@@ -23,7 +23,7 @@ workflows:
               only: main
       - task-that-can-be-skipped:
           <<: *main-filters
-      - hold: # <<< A job that will require manual approval in the CircleCI web application.
+      - unhold-to-deploy-to-prod: # <<< A job that will require manual approval in the CircleCI web application.
           <<: *main-filters
           type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
           requires: # We only run the "hold" job when test2 has succeeded
