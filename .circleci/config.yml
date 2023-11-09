@@ -46,7 +46,6 @@ jobs:
     docker:
       - image: cimg/python:3.9.4
     steps:
-      - checkout
       - when:
           condition:
             matches:
