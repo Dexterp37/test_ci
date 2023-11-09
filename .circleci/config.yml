@@ -34,8 +34,36 @@ workflows:
           <<: *main-filters
           requires:
             - unhold-to-deploy-to-prod
+      - publish:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
 
 jobs:
+  publish:
+    docker:
+      - image: cimg/python:<< pipeline.parameters.python-version >>
+    steps:
+      - checkout
+      - when:
+          condition:
+            matches:
+              pattern: "^v.*-pre.*$"
+              value: << pipeline.git.tag >>
+          steps:
+            - run: echo "wOOT - Matched tag - Would push to 'pre'"
+            - run: echo << pipeline.git.tag >>
+      - when:
+          condition:
+            not:
+              matches:
+                pattern: "^v.*-pre.*$"
+                value: << pipeline.git.tag >>
+          steps:
+            - run: echo "'pre' NOT MATCHED - Would push to release"
+            - run: echo << pipeline.git.tag >>
   task-to-run:
     docker:
       - image: circleci/rust:latest
